@@ -7,14 +7,17 @@ phases:
     commands:
       - echo Installing dependencies...
       - npm install -g pnpm
+
   pre_build:
     commands:
       - echo Installing project dependencies...
       - pnpm install
+
   build:
     commands:
       - echo Building React app...
       - pnpm build
+
   post_build:
     commands:
       - echo Building Docker image...
@@ -23,11 +26,7 @@ phases:
       - docker tag react-app:latest 345901254349.dkr.ecr.us-east-1.amazonaws.com/react-app:latest
       - docker push 345901254349.dkr.ecr.us-east-1.amazonaws.com/react-app:latest
 
-      - echo Deploying to EKS...
-      - aws eks update-kubeconfig --name react-cluster --region us-east-1
-      - kubectl set image deployment/react-app react-app=345901254349.dkr.ecr.us-east-1.amazonaws.com/react-app:latest -n react-app
-      - kubectl rollout status deployment/react-app -n react-app
-
 artifacts:
   files:
     - '**/*'
+
